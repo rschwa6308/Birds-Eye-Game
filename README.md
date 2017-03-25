@@ -13,6 +13,7 @@
 
 
 ## Controls
+Action | Control
 --- | ---
 left | 'A'
 right | 'D'
