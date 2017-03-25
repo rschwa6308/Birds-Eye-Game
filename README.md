@@ -13,6 +13,7 @@
 
 
 ## Controls
+---|---
 left | 'A'
 right | 'D'
 up | 'W'
