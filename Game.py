@@ -6,6 +6,8 @@ from Reference import *
 from Terrain_Gen import *
 from Items import items
 
+from time import sleep
+
 
 class Camera():
     edge_buffer = 6
@@ -126,8 +128,9 @@ class Minimap():
 def display_inventory(player):
     overlay_height = len(player.inventory) * 30 + 90
     overlay = pg.Surface((200, overlay_height), pg.SRCALPHA)
-    overlay.fill((0, 0, 0, 63))  # quarter transparent black
-    # pg.draw.rect(overlay, black, overlay.get_rect(), 5)
+    fill_color = (0, 68, 135, 63)
+    overlay.fill(fill_color)  # quarter transparent blue
+    pg.draw.rect(overlay, black, overlay.get_rect(), 1)
 
     title_image = inventory_font.render(" Inventory ", True, black)
     # print title_image.get_height()
@@ -145,7 +148,9 @@ def display_inventory(player):
             item_name = items[item_id]["name"]
             text = item_name + ": " + str(quantity)
             if i == player.inventory_index:
-                text += "   *"
+                text = "> " + text
+            else:
+                text = "     " + text
             # print text
             text_image = inventory_font.render(text, True, black)
             text_image.set_alpha(255)
@@ -155,7 +160,14 @@ def display_inventory(player):
 
     screen.blit(overlay, (screen_width - overlay.get_width() - 10, 10))
 
-    pg.display.update()
+
+def display_crafting(player):
+    overlay = pg.Surface((500, 300), pg.SRCALPHA)
+    fill_color = (0, 68, 135, 63)
+    overlay.fill(fill_color)  # quarter transparent blue
+    pg.draw.rect(overlay, black, overlay.get_rect(), 1)
+
+    screen.blit(overlay, (screen_width // 2 - overlay.get_width() // 2, screen_height // 2 - overlay.get_height() // 2))
 
 
 # takes the board+player to print, the screen to be printed on, and a bounding camera object and updates the screen
@@ -180,7 +192,7 @@ def display_board(board, player, screen, cam, minimap):
     # draw player
     drawx = (player.x - cam.x) * block_size
     drawy = (player.y - cam.y) * block_size
-    screen.blit(player.get_image(), (drawx, drawy))
+    screen.blit(pg.transform.scale(player.get_image(), (block_size // 2, block_size // 2)), (drawx, drawy))
 
     # draw minimap
     if minimap.open:
@@ -190,6 +202,10 @@ def display_board(board, player, screen, cam, minimap):
     # draw inventory if open
     if player.inventory_open:
         display_inventory(player)
+
+    # draw crafting screen if open
+    if player.crafting_open:
+        display_crafting(player)
 
     # flip display
     pg.display.update()
@@ -224,7 +240,7 @@ cam = Camera(player.x - grid_width / 2, player.y - grid_height / 2, grid_width, 
 # initialize minimap
 minimap = Minimap()
 minimap.update(cam.get_area(), world)
-# minimap.update([(x, y) for x in range(map_size) for y in range(map_size)], world)  # Terrain Gen Testing ONLY
+minimap.update([(x, y) for x in range(map_size) for y in range(map_size)], world)  # Terrain Gen Testing ONLY
 
 # Initialize I/O variables
 shift_pressed = False
@@ -275,6 +291,9 @@ while not done:
                 display_board(world, player, screen, cam, minimap)  # update display
             elif event.key == pg.K_LSHIFT or event.key == pg.K_RSHIFT:
                 shift_pressed = True
+            elif event.key == pg.K_TAB:
+                player.crafting_open = not player.crafting_open
+                display_board(world, player, screen, cam, minimap)
 
         elif event.type == pg.KEYUP:
             if event.key == pg.K_i:

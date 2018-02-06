@@ -21,6 +21,7 @@ class Player():
     inventory = []
     inventory_index = 0
     inventory_open = True
+    crafting_open = False
 
     def __init__(self, x, y):
         self.x = x

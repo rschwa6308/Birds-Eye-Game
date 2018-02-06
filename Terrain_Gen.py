@@ -105,7 +105,7 @@ def gen_line(a, b, board, land):
 def gen_islands(board, islands=(map_size // 15)):
     print("Generating Islands...")
     # islands = 1  # Terrain Gen Testing ONLY
-    max_radius = 2 * int(map_size ** 0.5)
+    max_radius = 40 # 2 * int(map_size ** 0.5)
     height = len(board)
     width = len(board[0])
 
@@ -209,13 +209,14 @@ def gen_land_bridges(world):
             for i in range(1, randint(1, 5)):
                 gen_land_bridge(center, sorted_centers[i], board, land, centers)
 
+    land = list(set(filter(in_bounds, land)))
+
     return board, land, centers
 
 
 def add_sand(world):
     print("Adding sand...")
     board, land, centers = world
-    land = list(filter(in_bounds, land))
     for pos in land:
         for x, y in get_neighbors_2(pos):
             if board[y][x] == 0:
@@ -231,7 +232,9 @@ def add_sand(world):
 def gen_trees(world):
     print("Generating shrubbery...")
     board, land, centers = world
-    for _ in range(100):  # gen 100 trees
+    tree_density = 0.01
+    num_trees = int(map_size ** 2 * tree_density)
+    for _ in range(num_trees):  # gen trees
         x, y = choice(land)
         if board[y][x] == 1:
             board[y][x] = 2
@@ -241,5 +244,7 @@ def gen_trees(world):
 
 def gen_world():
     return gen_trees(add_sand(gen_land_bridges(gen_islands(world))))
+    # return gen_trees(gen_land_bridges(gen_islands(world)))
+
 
 # print_board(world)
