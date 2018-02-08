@@ -1,0 +1,63 @@
+resources
+
+	above ground
+		small stones (hand)
+		sand (hand)
+		dirt (hand)
+		clay (hand)
+		mud (hand)
+		wood (small stone)
+		fresh water (stand next to lake, need iron tank (empty) in inventory), gives iron tank (fresh water)
+
+	underground
+		stone (wood pickaxe or higher)
+		iron (stone pickaxe or higher)
+		lead (iron pickaxe or higher)
+		carbon (find gas pocket, need iron tank (empty) in inventory), gives iron tank (carbon)
+
+	crafted
+		mud (10 dirt + 1 iron tank (water) = 10 mud), returns iron tank (empty)
+		brick (2 clay + furnace = 1 brick)
+		steel (2 iron + 1 iron tank (carbon) + furnace = 2 steel), returns iron tank (empty)
+		glass (2 sand + furnace = 1 glass)
+
+tools (plus crafting recipes)
+
+	small stone (found) - takes 5 hits to chop a tree, each 2 hits removes a stone
+
+	pickaxe (each recipe yields 1)
+		wood (3 wood)
+		stone (1 wood + 2 stone)
+		iron (1 wood + 2 iron)
+		steel (1 wood + 2 steel)
+		lead (1 wood + 2 lead)
+
+	axe (each recipe yields 1) - hits to chop a tree
+		wood (2 wood) - 4
+		stone (1 wood + 1 stone) - 3
+		iron (1 wood + 1 iron) - 2
+		steel (1 wood + 1 steel) - 1
+		lead (1 wood + 1 lead) - 1
+
+	iron tank (empty) (5 iron = 2 iron tank (empty))
+	
+	chest (6 wood = 1 chest)
+
+	furnace (10 stone = 1 furnace) - used to fire clay and cook food
+
+buildings - place immediately; destroying any building returns 75% of recipe
+
+	shelter
+		small mud hut (2x2 block interior) (25 mud + 10 clay)
+		mud hut (3x3 block interior) (30 mud + 15 clay)
+		
+		small wood hut (3x3 block interior) (35 wood)
+		wood hut (4x4 block interior) (45 wood)
+
+		small brick house (4x4 block interior) (25 brick + 10 wood + 5 glass)
+		brick house (5x5 block interior) (30 brick + 15 wood + 10 glass)
+
+	trade post (allows people to come to your town) (50 brick + 30 wood)
+
+
+
