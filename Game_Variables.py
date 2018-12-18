@@ -1,5 +1,5 @@
 #tile size for world rendering
-block_size = 30
+block_size = 20
 min_block_size = 12
 
 

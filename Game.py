@@ -174,12 +174,14 @@ def display_crafting(player):
 def display_board(board, player, screen, cam, minimap):
     screen.fill(blue)
     # draw world
+    delta_x = cam.x - int(cam.x)
+    delta_y = cam.y - int(cam.y)
     for y in range(0, cam.height + 2):
         for x in range(0, cam.width + 2):
-            gridx = x + int(cam.x)  # calculate board coordinates
-            gridy = y + int(cam.y)
-            drawx = (x - (cam.x - int(cam.x))) * block_size  # calculate screen coordinates
-            drawy = (y - (cam.y - int(cam.y))) * block_size
+            gridx = int(x + cam.x)  # calculate board coordinates
+            gridy = int(y + cam.y)
+            drawx = (x - delta_x) * block_size  # calculate screen coordinates
+            drawy = (y - delta_y) * block_size
             try:
                 cell = board[gridy][gridx]
             except IndexError:
@@ -215,8 +217,9 @@ def display_board(board, player, screen, cam, minimap):
 world, land, centers = gen_world()
 
 # grid dimensions of screen
-grid_width = int(12 * (128 / block_size))
-grid_height = int(9 * (128 / block_size))
+pixel_block_scale_factor = 100  # change this to alter window size
+grid_width = int(12 * (pixel_block_scale_factor / block_size))
+grid_height = int(9 * (pixel_block_scale_factor / block_size))
 
 # pixel dimensions of screen
 screen_width = grid_width * block_size
@@ -228,7 +231,7 @@ world_height = len(world)
 
 # pick island center within camera range to spawn on
 spawn = choice([l for l in land if (grid_width / 2 < l[0] < world_width - grid_width / 2) and (
-    grid_height / 2 < l[1] < world_height - grid_height / 2)])
+        grid_height / 2 < l[1] < world_height - grid_height / 2)])
 # spawn = choice(centers)
 
 # initialize player
@@ -240,7 +243,7 @@ cam = Camera(player.x - grid_width / 2, player.y - grid_height / 2, grid_width, 
 # initialize minimap
 minimap = Minimap()
 minimap.update(cam.get_area(), world)
-minimap.update([(x, y) for x in range(map_size) for y in range(map_size)], world)  # Terrain Gen Testing ONLY
+# minimap.update([(x, y) for x in range(map_size) for y in range(map_size)], world)  # Terrain Gen Testing ONLY
 
 # Initialize I/O variables
 shift_pressed = False
@@ -356,7 +359,6 @@ while not done:
         cam.move()
 
         # update minimap
-        # print cam.get_perimeter()
         minimap.update(cam.get_perimeter(), world)
 
         display_board(world, player, screen, cam, minimap)  # remove once god-mode is disabled
@@ -366,18 +368,17 @@ while not done:
         # grid dimensions of screen
         old_grid_width = grid_width
         old_grid_height = grid_height
-        grid_width = int(12 * (128 / block_size))
-        grid_height = int(9 * (128 / block_size))
+        grid_width = int(12 * (pixel_block_scale_factor / block_size))
+        grid_height = int(9 * (pixel_block_scale_factor / block_size))
 
         # change cam size and position, staying within world borders
         cam.width, cam.height = grid_width, grid_height
-        # focus = (cam.x + old_grid_width // 2, cam.y + old_grid_height // 2)
+        focus = (float(cam.x + old_grid_width / 2 + player.x) / 2, float(cam.y + old_grid_height / 2 + player.y) / 2)
         # TODO: keep player in same relative location on *screen*
-        focus = (player.x, player.y)
-        cam.x, cam.y = min(map_size - cam.width - 1, max(1, focus[0] - grid_width / 2)), min(map_size - cam.height - 1,
-                                                                                             max(1, focus[
-                                                                                                 1] - grid_height / 2))
-        # cam.x, cam.y = min(map_size - cam.width - 1, max(1, cam.x + old_grid_width / 2)), min(map_size - cam.height - 1, max(1, cam.y + old_grid_height / 2))
+        # focus = (player.x, player.y)
+        cam.x = min(map_size - cam.width - 1, max(1, focus[0] - grid_width / 2))
+        cam.y = min(map_size - cam.height - 1, max(1, focus[1] - grid_height / 2))
+        print(cam.x, cam.y)
 
         minimap.update(cam.get_area(), world)
 
@@ -392,7 +393,3 @@ while not done:
         # minimap.update(cam.get_area(), world)
 
         display_board(world, player, screen, cam, minimap)
-
-
-        # facing = player.get_facing()
-        # print world[facing[1]][facing[0]]
